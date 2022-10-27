@@ -9,8 +9,8 @@ const DEFAULT_USER = {
     id: 0,
     name: '',
     gender: 0,
-    // maleMsg: '',
-    // femaleMsg: ''
+    maleMsg: '',
+    femaleMsg: ''
 }
 
 const TITLE = {

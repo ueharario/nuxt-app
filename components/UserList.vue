@@ -2,7 +2,7 @@
   <div>
     <h2>{{ TITLE.title }}</h2>
     <button id="create" @click="create">{{ TITLE.create }}</button>
-    <UserForm v-if="isShow" @new="newUser" @edit="editUser" @close="closeUserForm" :user="user" :isEdit="isEdit" />
+    <UserForm v-if="isShow" @new="createUser" @edit="updateUser" @close="closeUserForm" :user="user" :isEdit="isEdit" />
     <table>
       <thead>
         <tr>
@@ -13,16 +13,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in Users.users" v-bind:key="user.id">
+        <tr v-for="user in _users" :key="user.id">
           <td>{{ user.name }}</td>
           <td>{{ getGenderLabel(user.gender) }}</td>
           <td>
-            <button @click="edit(user.id)">
+            <button @click="update(user.id)">
               {{ TITLE.edit }}
             </button>
           </td>
           <td>
-            <button @click="deleteItem(user.id)">
+            <button @click="deleteUser(user.id)">
               {{ TITLE.delete }}
             </button>
           </td>
@@ -35,15 +35,12 @@
 <script>
 import UserForm from '@/components/UserForm.vue'
 import { TITLE, GENDER_ARRAY } from '@/constants/USER.js'
-import Users from '@/static/data/user.json' // json ファイル
-import IssueId from '@/utils/IssueId'
 
 export default {
   data() {
     return {
       TITLE,
       user: {},
-      Users,
       isShow: false,
       isEdit: true
     }
@@ -51,9 +48,36 @@ export default {
   components: {
     UserForm
   },
+  computed: {
+    _users: {
+      get() {
+        return Array.from(this.$store.getters['UserApi/_users'])
+      },
+      set(value) {
+        this.$store.commit('UserApi/_users', value)
+      }
+    }
+  },
+  async created() {
+    await this.$store.dispatch('UserApi/fetchUser')
+  },
   methods: {
+    createUser(user) {
+      this.$store.dispatch('UserApi/createUser', user)
+    },
+    updateUser(user) {
+      this.$store.dispatch('UserApi/updateUser', user)
+    },
+    deleteUser(user) {
+      this.$store.dispatch('UserApi/deleteUser', user)
+    },
     create() {
       this.isEdit = false
+      this.openUserForm()
+    },
+    update(id) {
+      this.isEdit = true
+      this.user = this._users.find((v) => v.id === id)
       this.openUserForm()
     },
     openUserForm() {
@@ -63,31 +87,13 @@ export default {
       const targetGender = GENDER_ARRAY.find((v) => v.id === Number(gender))
       return targetGender.label
     },
-    newUser(user) {
-      user.id = IssueId(Users.users, user)
-      Users.users.push(user)
-      this.sortItem()
-    },
-    editUser(user) {
-      Users.users = Users.users.filter((v) => v.id !== user.id)
-      Users.users.push(user)
-      this.sortItem()
-    },
     closeUserForm(isShow) {
       this.isShow = isShow
       this.user = {}
+      this.sortUser()
     },
-    edit(id) {
-      this.isEdit = true
-      this.user = Users.users.find((v) => v.id === id)
-      this.openUserForm()
-    },
-    deleteItem(id) {
-      Users.users = Users.users.filter((v) => v.id !== id )
-      this.sortItem()
-    },
-    sortItem() {
-      Users.users.sort((prev, nxt) => prev.id - nxt.id)
+    sortUser() {
+      this._users.sort((prev, nxt) => prev.id - nxt.id)
     }
   }
 }

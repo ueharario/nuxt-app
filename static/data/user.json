@@ -1,22 +1,20 @@
-{
-    "users": [
-        {
-            "id": 1,
-            "name": "Micheal",
-            "gender": 1,
-            "maleMessage": "Baseball"
-        },
-        {
-            "id": 2,
-            "name": "Lincoln",
-            "gender": 1,
-            "maleMessage": "Football"
-        },
-        {
-            "id": 3,
-            "name": "Michelle",
-            "gender": 2,
-            "femaleMessage": "Volleyball"
-        }
-    ]
-}
+[
+    {
+        "id": 1,
+        "name": "Micheal",
+        "gender": 1,
+        "maleMessage": "Baseball"
+    },
+    {
+        "id": 2,
+        "name": "Lincoln",
+        "gender": 1,
+        "maleMessage": "Football"
+    },
+    {
+        "id": 3,
+        "name": "Michelle",
+        "gender": 2,
+        "femaleMessage": "Volleyball"
+    }
+]

@@ -1,7 +1,7 @@
-// import { UserApi } from './modules/UserApi.js'
+import { UserApi } from './modules/UserApi.js'
 
-// export default {
-//     modules: {
-//         UserApi
-//     }
-// }
+export default {
+    modules: {
+        UserApi
+    }
+}
