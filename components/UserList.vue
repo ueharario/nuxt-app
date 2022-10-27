@@ -60,7 +60,7 @@ export default {
       this.isShow = true
     },
     getGenderLabel(gender) {
-      const targetGender = GENDER_ARRAY.find((v) => v.id === gender)
+      const targetGender = GENDER_ARRAY.find((v) => v.id === Number(gender))
       return targetGender.label
     },
     newUser(user) {
