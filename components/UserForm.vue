@@ -3,15 +3,25 @@
       <div id="content">
         <div>
             <label>{{ TITLE.name }}</label>
-            <input type="text" v-model="editUser.name">
+            <input type="text" v-model="editUser.name" @blur="validate('name')">
+            <p id="errors" v-if="!!errors.name">{{ errors.name }}</p>
         </div>
         <div>
             <label>{{ TITLE.gender }}</label>
-            <select v-model="editUser.gender">
+            <select v-model="editUser.gender" @blur="validate('gender')">
                 <option v-for="column in GENDER_ARRAY" v-bind:key="column.id" :value="column.id">
                     {{ column.label }}
                 </option>
             </select>
+            <p id="errors" v-if="!!errors.gender">{{ errors.gender }}</p>
+        </div>
+        <div v-if="isMale">
+            <input type="text" placeholder="Male_Message" v-model="editUser.maleMsg" @blur="validate('maleMsg')">
+            <p id="errors" v-if="!!errors.maleMsg">{{ errors.maleMsg }}</p>
+        </div>
+        <div v-if="isFemale">
+            <input type="text" placeholder="Female_Message" v-model="editUser.femaleMsg" @blur="validate('femaleMsg')">
+            <p id="errors" v-if="!!errors.femaleMsg">{{ errors.femaleMsg }}</p>
         </div>
         <div>
             <button @click="close">{{ TITLE.close }}</button>
@@ -23,7 +33,21 @@
 </template>
 
 <script>
-import { TITLE, GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
+import { TITLE, GENDER, GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
+import * as yup from "yup";
+
+const UserSchema = yup.object().shape({
+    name: yup.string().required('Name is required.'),
+    gender: yup.number().required('Gender is a required selection.'),
+    maleMsg: yup.string().when("gender", {
+        is: 1 ,
+        then: yup.string().required('This is a required message.')
+    }),
+    femaleMsg: yup.string().when('gender', {
+        is: 2,
+        then: yup.string().required('This is a required message.')
+    })
+})
 
 export default {
     props: {
@@ -44,7 +68,16 @@ export default {
         return {
             TITLE,
             GENDER_ARRAY,
-            editUser: {}
+            editUser: {},
+            errors: DEFAULT_USER
+        }
+    },
+    computed: {
+        isMale() {
+            return this.editUser.gender === GENDER.male.id
+        },
+        isFemale() {
+            return this.editUser.gender === GENDER.female.id
         }
     },
     mounted() {
@@ -52,8 +85,8 @@ export default {
             () => this.user,
             (newValue, oldValue) => {
                 if (newValue !== oldValue) {
-                    const { id, name, gender } = newValue
-                    this.editUser = { id, name, gender }
+                    const { id, name, gender, maleMsg, femaleMsg } = newValue
+                    this.editUser = { id, name, gender, maleMsg, femaleMsg }
                 }
             },
             {
@@ -71,12 +104,37 @@ export default {
             this.editUser = DEFAULT_USER
         },
         update() {
-            this.$emit('edit', this.editUser)
-            this.close()
+            UserSchema.validate(this.editUser, { abortEarly: false })
+            .then(() => {
+                this.$emit('edit', this.editUser)
+                this.close()
+            })
+            .catch((err) => {
+                err.inner.forEach((error) => {
+                    this.errors = { ...this.errors, [error.path]: error.message}
+                })
+            })
         },
         register() {
-            this.$emit('new', this.editUser)
-            this.close()
+            UserSchema.validate(this.editUser, { abortEarly: false })
+            .then(() => {
+                console.log("clear")
+                this.$emit('new', this.editUser)
+                this.close()
+            })
+            .catch((err) => {
+                console.log("error")
+                err.inner.forEach((error) => {
+                    this.errors = { ...this.errors, [error.path]: error.message}
+                })
+            })
+        },
+        validate(field) {
+            UserSchema.validateAt(field, this.editUser)
+                .then(() => (this.errors[field] = ''))
+                .catch((err) => {
+                    this.errors[err.path] = err.message
+                })
         }
     }
 }
