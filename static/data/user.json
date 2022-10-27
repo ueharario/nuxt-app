@@ -1,4 +1,19 @@
 {
-    "name": "Shohei Ohtani",
-    "gender": 1
+    "users": [
+        {
+            "id": 1,
+            "name": "Micheal",
+            "gender": 1
+        },
+        {
+            "id": 2,
+            "name": "Lincoln",
+            "gender": 1
+        },
+        {
+            "id": 3,
+            "name": "Michelle",
+            "gender": 2
+        }
+    ]
 }

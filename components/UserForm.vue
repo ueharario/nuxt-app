@@ -2,36 +2,49 @@
   <div id="overlay">
       <div id="content">
         <div>
+            <label>{{ TITLE.name }}</label>
             <input type="text" v-model="editUser.name">
         </div>
         <div>
+            <label>{{ TITLE.gender }}</label>
             <select v-model="editUser.gender">
                 <option v-for="column in GENDER_ARRAY" v-bind:key="column.id" :value="column.id">
                     {{ column.label }}
                 </option>
             </select>
         </div>
-        <button @click="close">Cancel</button>
-        <button @click="save">Update</button>
+        <div>
+            <button @click="close">{{ TITLE.close }}</button>
+            <button @click="update" v-if="isEdit">{{ TITLE.update }}</button>
+            <button @click="register" v-else>{{ TITLE.register }}</button>
+        </div>
       </div>
   </div>
 </template>
 
 <script>
-import { GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
+import { TITLE, GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
 
 export default {
     props: {
-        user: Object,
+        user: {
+            type: Object,
+            default: DEFAULT_USER
+        },
         isShow: {
             type: Boolean,
             default: false
         },
+        isEdit: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
-            editUser: DEFAULT_USER,
-            GENDER_ARRAY
+            TITLE,
+            GENDER_ARRAY,
+            editUser: {}
         }
     },
     mounted() {
@@ -39,8 +52,8 @@ export default {
             () => this.user,
             (newValue, oldValue) => {
                 if (newValue !== oldValue) {
-                    const { name, gender } = newValue
-                    this.editUser = { name, gender }
+                    const { id, name, gender } = newValue
+                    this.editUser = { id, name, gender }
                 }
             },
             {
@@ -57,8 +70,12 @@ export default {
         reset() {
             this.editUser = DEFAULT_USER
         },
-        save() {
-            this.$emit('send', this.editUser)
+        update() {
+            this.$emit('edit', this.editUser)
+            this.close()
+        },
+        register() {
+            this.$emit('new', this.editUser)
             this.close()
         }
     }
