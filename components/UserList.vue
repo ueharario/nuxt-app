@@ -7,10 +7,10 @@
       <tbody>
         <tr>
           <td>
-            {{ user.name }}
+            {{ userData.name }}
           </td>
           <td>
-            {{ getGenderLabel(user.gender) }}
+            {{ getGenderLabel(userData.gender) }}
           </td>
         </tr>
       </tbody>
@@ -21,12 +21,14 @@
 <script>
 import UserForm from '@/components/UserForm.vue'
 import { GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
+import userData from '@/static/data/user.json'
 
 export default {
   data() {
     return {
       user: DEFAULT_USER,
       isShow: false,
+      userData
     }
   },
   components: {
