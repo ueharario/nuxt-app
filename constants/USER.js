@@ -6,11 +6,13 @@ const GENDER = {
 const GENDER_ARRAY = Object.entries(GENDER).map((item) => item[1])
 
 const DEFAULT_USER = {
-    id: 0,
-    name: '',
-    gender: 0,
-    maleMsg: '',
-    femaleMsg: ''
+    // id: 0,
+    // name: '',
+    // gender: 0,
+    // maleMsg: '',
+    // femaleMsg: ''
+    name: 'Ohtani',
+    gender: GENDER.male.id
 }
 
 const TITLE = {
@@ -25,22 +27,4 @@ const TITLE = {
     register: "Register"
 }
 
-const USER = [
-    {
-        id: 1,
-        name: 'Micheal',
-        gender: 'Male'
-    },
-    {
-        id: 2,
-        name: 'Lincoln',
-        gender: 'Male'
-    },
-    {
-        id: 3,
-        name: 'Michelle',
-        gender: 'Female'
-    }
-]
-
-export { GENDER, GENDER_ARRAY, DEFAULT_USER, TITLE, USER }
+export { GENDER, GENDER_ARRAY, DEFAULT_USER, TITLE }

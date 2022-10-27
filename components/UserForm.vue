@@ -2,119 +2,47 @@
   <div id="overlay">
       <div id="content">
         <div>
-            <input type="text" v-model="editName">
+            <input type="text" v-model="editUser.name">
+        </div>
+        <div>
+            <select v-model="editUser.gender">
+                <option v-for="column in GENDER_ARRAY" v-bind:key="column.id" :value="column.id">
+                    {{ column.label }}
+                </option>
+            </select>
         </div>
         <button @click="close">Cancel</button>
         <button @click="save">Update</button>
-          <!-- <div>
-              <label>{{ TITLE.name }}</label>
-              <InputTextName v-model="editUser.name" :editUser="editUser" @blur="validate('name')" />
-              <p id="errors" v-if="!!errors.name">{{ errors.name }}</p>
-          </div>
-          <div>
-              <label>{{ TITLE.gender }}</label>
-              <SelectItem v-model="editUser.gender" :editUser="editUser" :options="GENDER_ARRAY" @blur="validate('gender')" />
-              <p id="errors" v-if="!!errors.gender">{{ errors.gender }}</p>
-          </div>
-          <div v-if="isMale">
-              <InputTextMaleMsg v-model="editUser.maleMsg" :editUser="editUser" @blur="validate('maleMsg')" />
-              <p id="errors" v-if="!!errors.maleMsg">{{ errors.maleMsg }}</p>
-          </div>
-          <div v-if="isFemale">
-              <InputTextFemaleMsg v-model="editUser.femaleMsg" :editUser="editUser" @blur="validate('femaleMsg')" />
-              <p id="errors" v-if="!!errors.femaleMsg">{{ errors.femaleMsg }}</p>
-          </div>
-          <div>
-              <button @click="close">{{ TITLE.close }}</button>
-              <button @click="openConfirm" v-if="isEdit">{{ TITLE.update }}</button>
-              <button @click="openConfirm" v-else>{{ TITLE.register }}</button>
-          </div>
-          <PopupDialog @confirm="confirm" /> -->
       </div>
   </div>
 </template>
 
 <script>
-// import InputTextName from '@/components/InputField/InputTextName.vue'
-// import SelectItem from '@/components/InputField/SelectGender.vue'
-// import InputTextMaleMsg from '@/components/InputField/InputTextMaleMessage.vue'
-// import InputTextFemaleMsg from '@/components/InputField/InputTextFemaleMessage.vue'
-// import PopupDialog from '@/components/ConfirmationDialog.vue'
-// import { DialogUtil } from '@/components/ConfirmationDialog.vue'
-// import { GENDER, GENDER_ARRAY, DEFAULT_USER, TITLE } from '@/constants/USER.js'
-// import * as yup from "yup";
-
-// const UserSchema = yup.object().shape({
-//     name: yup.string().required('Name is required.'),
-//     gender: yup.number().required('Gender is a required selection.'),
-//     maleMsg: yup.string().when("gender", {
-//         is: 1 ,
-//         then: yup.string().required('This is a required message.')
-//     }),
-//     femaleMsg: yup.string().when('gender', {
-//         is: 2,
-//         then: yup.string().required('This is a required message.')
-//     })
-// })
+import { GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
 
 export default {
     props: {
-        name: {
-            type: String,
-            default: 'Ohtani'
-        },
-    //     user: {
-    //         type: Object,
-    //         default: DEFAULT_USER
-    //     },
+        user: Object,
         isShow: {
             type: Boolean,
             default: false
         },
-    //     isEdit: {
-    //         type: Boolean,
-    //         default: false
-    //     }
     },
     data() {
         return {
-            editName: ''
-    //         editUser: {},
-    //         errors: DEFAULT_USER,
-    //         GENDER_ARRAY,
-    //         TITLE
+            editUser: DEFAULT_USER,
+            GENDER_ARRAY
         }
     },
-    // components: {
-    //     InputTextName,
-    //     SelectItem,
-    //     InputTextMaleMsg,
-    //     InputTextFemaleMsg,
-    //     PopupDialog
-    // },
-    // computed: {
-    //     isMale() {
-    //         return Number(this.editUser.gender) === GENDER.male.id
-    //     },
-    //     isFemale() {
-    //         return Number(this.editUser.gender) === GENDER.female.id
-    //     },
-    // },
     mounted() {
         this.$watch(
-            () => this.name,
+            () => this.user,
             (newValue, oldValue) => {
                 if (newValue !== oldValue) {
-                    this.editName = newValue
+                    const { name, gender } = newValue
+                    this.editUser = { name, gender }
                 }
             },
-    //         () => this.user,
-    //         (newValue, oldValue) => {
-    //             if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-    //                 const { id, name, gender, maleMsg, femaleMsg } = newValue
-    //                 this.editUser = { id, name, gender, maleMsg, femaleMsg }
-    //             }
-    //         },
             {
                 immediate: true,
                 deep: true
@@ -127,62 +55,12 @@ export default {
             this.$emit('close', false)
         },
         reset() {
-            this.editName  = ''
+            this.editUser = DEFAULT_USER
         },
         save() {
-            this.$emit('send', this.editName)
+            this.$emit('send', this.editUser)
             this.close()
         }
-    //     confirm(userChoice) {
-    //         if (this.isEdit) this.successUpdate(userChoice)
-    //         else this.successRegister(userChoice)
-
-    //     },
-    //     openConfirm() {
-    //         DialogUtil.showDialog()
-    //     },
-    //     successRegister(userChoice) {
-    //         if (userChoice) {
-    //             UserSchema.validate(this.editUser, { abortEarly: false })
-    //             .then(() => {
-    //                 this.$emit('new', this.editUser)
-    //                 this.close()
-    //             })
-    //             .catch((err) => {
-    //                 err.inner.forEach((error) => {
-    //                     this.errors = { ...this.errors, [error.path]: error.message}
-    //                 })
-    //             })
-    //         }
-    //     },
-    //     successUpdate(userChoice) {
-    //         if (userChoice) {
-    //             UserSchema.validate(this.editUser, { abortEarly: false })
-    //             .then(() => {
-    //                 this.$emit('edit', this.editUser)
-    //                 this.close()
-    //             })
-    //             .catch((err) => {
-    //                 err.inner.forEach((error) => {
-    //                     this.errors = { ...this.errors, [error.path]: error.message}
-    //                 })
-    //             })
-    //         }
-    //     },
-    //     validate(field) {
-    //         UserSchema.validateAt(field, this.editUser)
-    //             .then(() => (this.errors[field] = ''))
-    //             .catch((err) => {
-    //                 this.errors[err.path] = err.message
-    //             })
-    //     },
-    //     close() {
-    //         this.reset()
-    //         this.$emit('close', false)
-    //     },
-    //     reset() {
-    //         this.editUser = DEFAULT_USER
-    //     },
     }
 }
 </script>
