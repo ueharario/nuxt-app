@@ -8,22 +8,22 @@
 </template>
 
 <script>
-export default {
-    props: {
-        editUser: {
-            type: Object,
-            default: () => {}
-        }
-    },
-    computed: {
-        femaleMsg: {
-            get() {
-                return this.editUser.femaleMsg
-            },
-            set(newValue) {
-                this.$emit('input', newValue)
-            }
-        }
-    }
-}
+// export default {
+//     props: {
+//         editUser: {
+//             type: Object,
+//             default: () => {}
+//         }
+//     },
+//     computed: {
+//         femaleMsg: {
+//             get() {
+//                 return this.editUser.femaleMsg
+//             },
+//             set(newValue) {
+//                 this.$emit('input', newValue)
+//             }
+//         }
+//     }
+// }
 </script>

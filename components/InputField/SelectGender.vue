@@ -9,31 +9,31 @@
 
 <script>
 // import { GENDER_ARRAY } from '@/constants/USERS.js'
-export default {
-    props: {
-        editUser: {
-            type: Object,
-            default: () => {}
-        },
-        options: {
-            type: Object,
-            default: () => {}
-        }
-    },
-    data() {
-        return {
-            GENDER_ARRAY
-        }
-    },
-    computed: {
-        gender: {
-            get() {
-                return this.editUser.gender
-            },
-            set(newValue) {
-                this.$emit('input', Number(newValue))
-            }
-        }
-    }
-}
+// export default {
+//     props: {
+//         editUser: {
+//             type: Object,
+//             default: () => {}
+//         },
+//         options: {
+//             type: Object,
+//             default: () => {}
+//         }
+//     },
+//     data() {
+//         return {
+//             GENDER_ARRAY
+//         }
+//     },
+//     computed: {
+//         gender: {
+//             get() {
+//                 return this.editUser.gender
+//             },
+//             set(newValue) {
+//                 this.$emit('input', Number(newValue))
+//             }
+//         }
+//     }
+// }
 </script>

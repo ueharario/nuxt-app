@@ -25,4 +25,22 @@ const TITLE = {
     register: "Register"
 }
 
-export { GENDER, GENDER_ARRAY, DEFAULT_USER, TITLE }
+const USER = [
+    {
+        id: 1,
+        name: 'Micheal',
+        gender: 'Male'
+    },
+    {
+        id: 2,
+        name: 'Lincoln',
+        gender: 'Male'
+    },
+    {
+        id: 3,
+        name: 'Michelle',
+        gender: 'Female'
+    }
+]
+
+export { GENDER, GENDER_ARRAY, DEFAULT_USER, TITLE, USER }
