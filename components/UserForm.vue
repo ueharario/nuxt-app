@@ -21,9 +21,10 @@
         </div>
         <div>
             <button @click="close">{{ TITLE.close }}</button>
-            <button @click="update" v-if="isEdit">{{ TITLE.update }}</button>
-            <button @click="register" v-else>{{ TITLE.register }}</button>
+            <button @click="openConfirm" v-if="isEdit">{{ TITLE.update }}</button>
+            <button @click="openConfirm" v-else>{{ TITLE.register }}</button>
         </div>
+        <ConfirmationDialog @confirm="confirm" />
       </div>
   </div>
 </template>
@@ -34,6 +35,8 @@ import SelectGender from '@/components/InputField/SelectGender.vue'
 import InputTextMaleMessage from '@/components/InputField/InputTextMaleMessage.vue'
 import InputTextFemaleMessage from '@/components/InputField/InputTextFemaleMessage.vue'
 import { TITLE, GENDER, GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
+import { DialogUtil } from '@/components/ConfirmationDialog.vue'
 import * as yup from "yup";
 
 const UserSchema = yup.object().shape({
@@ -76,7 +79,8 @@ export default {
         InputTextName,
         SelectGender,
         InputTextMaleMessage,
-        InputTextFemaleMessage
+        InputTextFemaleMessage,
+        ConfirmationDialog
     },
     computed: {
         isMale() {
@@ -102,6 +106,17 @@ export default {
         )
     },
     methods: {
+        confirm(userChoice) {
+            if (this.isEdit && userChoice) {
+                this.successUpdate()
+            }
+            else if (!this.isEdit && userChoice) {
+                this.successRegister()
+            }
+        },
+        openConfirm() {
+            DialogUtil.showDialog()
+        },
         close() {
             this.reset()
             this.$emit('close', false)
@@ -109,7 +124,7 @@ export default {
         reset() {
             this.editUser = DEFAULT_USER
         },
-        update() {
+        successUpdate() {
             UserSchema.validate(this.editUser, { abortEarly: false })
             .then(() => {
                 this.$emit('edit', this.editUser)
@@ -121,7 +136,7 @@ export default {
                 })
             })
         },
-        register() {
+        successRegister() {
             UserSchema.validate(this.editUser, { abortEarly: false })
             .then(() => {
                 console.log("clear")

@@ -11,69 +11,68 @@
 </template>
 
 <script>
+const _DialogUtil = () => {
+    let callbacks = []
 
-// const _DialogUtil = () => {
-//     let callbacks = []
+    const showDialog = () => {
+        callbacks.forEach(callback => callback(true))
+    }
 
-//     const showDialog = () => {
-//         callbacks.forEach(callback => callback(true))
-//     }
+    const closeDialog = () => {
+        callbacks.forEach(callback => callback(false))
+    }
 
-//     const closeDialog = () => {
-//         callbacks.forEach(callback => callback(false))
-//     }
+    const getCallback = (callback) => {
+        callbacks.push(callback)
+    }
 
-//     const getCallback = (callback) => {
-//         callbacks.push(callback)
-//     }
+    return {
+        showDialog,
+        closeDialog,
+        getCallback
+    }
+}
 
-//     return {
-//         showDialog,
-//         closeDialog,
-//         getCallback
-//     }
-// }
+export const DialogUtil = _DialogUtil()
 
-// export const DialogUtil = _DialogUtil()
-
-// export default {
-//     data() {
-//         return {
-//             message: 'Confirmation',
-//             showDialog: false,
-//             resolve: () => {},
-//             userChoice: false
-//         }
-//     },
-//     mounted() {
-//         DialogUtil.getCallback((value) => {
-//             this.showDialog = value
-//         })
-//     },
-//     methods: {
-//         async someProcess() {
-//             DialogUtil.showDialog()
-//             const answer = await new Promise((resolve) => {
-//             this.resolve = resolve
-//             })
-//             this.userChoice = answer
-//             this.$emit('confirm', this.userChoice)
-//             DialogUtil.closeDialog()
-//         },
-//         successConfirm() {
-//             this.someProcess()
-//             this.resolve(true)
-//         },
-//         cancelConfirm() {
-//             this.someProcess()
-//             this.resolve(false)
-//         }
-//     }
-// }
+export default {
+    data() {
+        return {
+            message: 'Confirmation',
+            showDialog: false,
+            resolve: () => {},
+            userChoice: false
+        }
+    },
+    mounted() {
+        DialogUtil.getCallback((value) => {
+            this.showDialog = value
+        })
+    },
+    methods: {
+        async someProcess() {
+            DialogUtil.showDialog()
+            const answer = await new Promise((resolve) => {
+            this.resolve = resolve
+            })
+            this.userChoice = answer
+            this.$emit('confirm', this.userChoice)
+            DialogUtil.closeDialog()
+        },
+        successConfirm() {
+            this.someProcess()
+            this.resolve(true)
+        },
+        cancelConfirm() {
+            this.someProcess()
+            this.resolve(false)
+        }
+    }
+}
 </script>
 
 <style>
-/* #overlay{
+#overlay{
   z-index:1;
 
   position:fixed;
@@ -93,5 +92,5 @@
   width:25%;
   padding: 1em;
   background:#fff;
-} */
+}
 </style>
