@@ -1,10 +1,12 @@
 <template>
-  <div>
-    <h2>{{ TITLE.title }}</h2>
-    <button id="create" @click="create">{{ TITLE.create }}</button>
+  <div class="container">
+    <h2 class="text-center">{{ TITLE.title }}</h2>
+    <button class="btn btn-outline-success btn-sm my-2 float-end" @click="create">
+      {{ TITLE.create }}
+    </button>
     <UserForm v-if="isShow" @new="createUser" @edit="updateUser" @close="closeUserForm" :user="user" :isEdit="isEdit" />
-    <table>
-      <thead>
+    <table class="table table-striped mt-2">
+      <thead class="table-dark">
         <tr>
           <th>{{ TITLE.name }}</th>
           <th>{{ TITLE.gender }}</th>
@@ -14,15 +16,15 @@
       </thead>
       <tbody>
         <tr v-for="user in _users" :key="user.id">
-          <td>{{ user.name }}</td>
-          <td>{{ getGenderLabel(user.gender) }}</td>
-          <td>
-            <button @click="update(user.id)">
+          <td class="col-md-5 align-middle">{{ user.name }}</td>
+          <td class="col-md-5 align-middle">{{ getGenderLabel(user.gender) }}</td>
+          <td class="col-md-1">
+            <button class="btn btn-outline-primary btn-sm" @click="update(user.id)">
               {{ TITLE.edit }}
             </button>
           </td>
-          <td>
-            <button @click="deleteUser(user.id)">
+          <td class="col-md-1">
+            <button class="btn btn-outline-danger btn-sm" @click="deleteUser(user.id)">
               {{ TITLE.delete }}
             </button>
           </td>
@@ -100,21 +102,5 @@ export default {
 </script>
 
 <style>
-th,td {
-  border: solid 1px;
-  padding: 10px;
-  text-align: center;
-}
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-h2 {
-  text-align: center;
-}
 
-#create {
-  float: right;
-  margin: 10px;
-}
 </style>

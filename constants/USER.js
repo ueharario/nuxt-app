@@ -20,6 +20,7 @@ const TITLE = {
     delete: "Delete",
     name: "Name",
     gender: "Gender",
+    message: "Message",
     close: "Close",
     update: "Update",
     register: "Register"

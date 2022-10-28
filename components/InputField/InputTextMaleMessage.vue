@@ -1,5 +1,6 @@
 <template>
     <input
+        class="form-control"
         type="text"
         v-model="maleMessage"
         placeholder="Male_Message"

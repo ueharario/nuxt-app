@@ -1,28 +1,30 @@
 <template>
   <div id="overlay">
       <div id="content">
-        <div>
+        <div class="group-form">
             <label>{{ TITLE.name }}</label>
             <InputTextName v-model="editUser.name" :editUser="editUser" @blur="validate('name')" />
-            <p id="errors" v-if="!!errors.name">{{ errors.name }}</p>
+            <p class="errors form-text" v-if="!!errors.name">{{ errors.name }}</p>
         </div>
-        <div>
+        <div class="group-form">
             <label>{{ TITLE.gender }}</label>
             <SelectGender v-model="editUser.gender" :editUser="editUser" :options="GENDER_ARRAY" @blur="validate('gender')" />
-            <p id="errors" v-if="!!errors.gender">{{ errors.gender }}</p>
+            <p class="errors form-text" v-if="!!errors.gender">{{ errors.gender }}</p>
         </div>
-        <div v-if="isMale">
+        <div class="group-form" v-if="isMale">
+            <label>{{ TITLE.message }}</label>
             <InputTextMaleMessage v-model="editUser.maleMessage" :editUser="editUser" @blur="validate('maleMessage')" />
-            <p id="errors" v-if="!!errors.maleMessage">{{ errors.maleMessage }}</p>
+            <p class="errors form-text" v-if="!!errors.maleMessage">{{ errors.maleMessage }}</p>
         </div>
-        <div v-if="isFemale">
+        <div class="group-form" v-if="isFemale">
+            <label>{{ TITLE.message }}</label>
             <InputTextFemaleMessage v-model="editUser.femaleMessage" :editUser="editUser" @blur="validate('femaleMessage')" />
-            <p id="errors" v-if="!!errors.femaleMessage">{{ errors.femaleMessage }}</p>
+            <p class="errors form-text" v-if="!!errors.femaleMessage">{{ errors.femaleMessage }}</p>
         </div>
-        <div>
-            <button @click="close">{{ TITLE.close }}</button>
-            <button @click="openConfirm" v-if="isEdit">{{ TITLE.update }}</button>
-            <button @click="openConfirm" v-else>{{ TITLE.register }}</button>
+        <div class="form-group float-end">
+            <button class="btn btn-outline-secondary btn-sm my-2 mr-2" @click="close">{{ TITLE.close }}</button>
+            <button class="btn btn-outline-warning btn-sm my-2" @click="openConfirm" v-if="isEdit">{{ TITLE.update }}</button>
+            <button class="btn btn-outline-warning btn-sm my-2" @click="openConfirm" v-else>{{ TITLE.register }}</button>
         </div>
         <ConfirmationDialog @confirm="confirm" />
       </div>
@@ -162,7 +164,7 @@ export default {
 </script>
 
 <style scoped>
-#errors {
+.errors {
   color: red;
 }
 

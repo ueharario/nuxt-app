@@ -1,5 +1,5 @@
 <template>
-    <select v-model="gender">
+    <select class="form-control" v-model="gender">
         <option disabled value="">Please select.</option>
         <option v-for="key in options" :key="key.id" :value="key.id">
             {{ key.label }}
