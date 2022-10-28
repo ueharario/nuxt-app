@@ -38,21 +38,8 @@ import InputTextMaleMessage from '@/components/InputField/InputTextMaleMessage.v
 import InputTextFemaleMessage from '@/components/InputField/InputTextFemaleMessage.vue'
 import { TITLE, GENDER, GENDER_ARRAY, DEFAULT_USER } from '@/constants/USER.js'
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
-import { DialogUtil } from '@/components/ConfirmationDialog.vue'
-import * as yup from "yup";
-
-const UserSchema = yup.object().shape({
-    name: yup.string().required('Name is required.'),
-    gender: yup.number().required('Gender is a required selection.'),
-    maleMessage: yup.string().when("gender", {
-        is: 1 ,
-        then: yup.string().required('This is a required message.')
-    }),
-    femaleMessage: yup.string().when('gender', {
-        is: 2,
-        then: yup.string().required('This is a required message.')
-    })
-})
+import { DialogUtil } from '@/utils/DialogUtil.js'
+import UserSchema from '@/utils/UserSchema.js'
 
 export default {
     props: {
@@ -108,6 +95,10 @@ export default {
         )
     },
     methods: {
+        /**
+         * 確認ダイアログでユーザ選択後、登録処理を行います。
+         * @param {boolean} userChoice 確認ダイアログの結果です。
+         */
         confirm(userChoice) {
             if (this.isEdit && userChoice) {
                 this.successUpdate()
@@ -116,16 +107,9 @@ export default {
                 this.successRegister()
             }
         },
-        openConfirm() {
-            DialogUtil.showDialog()
-        },
-        close() {
-            this.reset()
-            this.$emit('close', false)
-        },
-        reset() {
-            this.editUser = DEFAULT_USER
-        },
+        /**
+         * 新規作成モードで登録します。
+         */
         successUpdate() {
             UserSchema.validate(this.editUser, { abortEarly: false })
             .then(() => {
@@ -138,26 +122,50 @@ export default {
                 })
             })
         },
+        /**
+         * 編集モードで更新します。
+         */
         successRegister() {
             UserSchema.validate(this.editUser, { abortEarly: false })
             .then(() => {
-                console.log("clear")
                 this.$emit('new', this.editUser)
                 this.close()
             })
             .catch((err) => {
-                console.log("error")
                 err.inner.forEach((error) => {
                     this.errors = { ...this.errors, [error.path]: error.message}
                 })
             })
         },
+        /**
+         * バリデーションチェックを行います。
+         * @param {string} field 入力内容です。
+         */
         validate(field) {
             UserSchema.validateAt(field, this.editUser)
                 .then(() => (this.errors[field] = ''))
                 .catch((err) => {
                     this.errors[err.path] = err.message
                 })
+        },
+        /**
+         * 確認ダイアログを開きます。
+         */
+         openConfirm() {
+            DialogUtil.showDialog()
+        },
+        /**
+         * ダイアログを閉じます。
+         */
+        close() {
+            this.reset()
+            this.$emit('close', false)
+        },
+        /**
+         * 入力項目をリセットします。
+         */
+        reset() {
+            this.editUser = DEFAULT_USER
         }
     }
 }

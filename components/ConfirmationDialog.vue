@@ -11,29 +11,7 @@
 </template>
 
 <script>
-const _DialogUtil = () => {
-    let callbacks = []
-
-    const showDialog = () => {
-        callbacks.forEach(callback => callback(true))
-    }
-
-    const closeDialog = () => {
-        callbacks.forEach(callback => callback(false))
-    }
-
-    const getCallback = (callback) => {
-        callbacks.push(callback)
-    }
-
-    return {
-        showDialog,
-        closeDialog,
-        getCallback
-    }
-}
-
-export const DialogUtil = _DialogUtil()
+import { DialogUtil } from '@/utils/DialogUtil.js'
 
 export default {
     data() {
@@ -50,6 +28,9 @@ export default {
         })
     },
     methods: {
+        /**
+         * 確認ダイアログの結果を Promise で取得します。
+         */
         async someProcess() {
             DialogUtil.showDialog()
             const answer = await new Promise((resolve) => {
@@ -59,10 +40,16 @@ export default {
             this.$emit('confirm', this.userChoice)
             DialogUtil.closeDialog()
         },
+        /**
+         * 確認ダイアログで Yes を選択したときの処理です。
+         */
         successConfirm() {
             this.someProcess()
             this.resolve(true)
         },
+        /**
+         * 確認ダイアログで No を選択したときの処理です。
+         */
         cancelConfirm() {
             this.someProcess()
             this.resolve(false)

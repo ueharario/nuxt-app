@@ -64,43 +64,72 @@ export default {
     await this.$store.dispatch('UserApi/fetchUser')
   },
   methods: {
+    /**
+     * 新規作成を行います。
+     * @param {object} user 登録するユーザです。
+     */
     createUser(user) {
       this.$store.dispatch('UserApi/createUser', user)
     },
+    /**
+     * 編集を行います。
+     * @param {object} user 更新するユーザです。
+     */
     updateUser(user) {
       this.$store.dispatch('UserApi/updateUser', user)
     },
+    /**
+     * 削除を行います。
+     * @param {object} user 削除するユーザです。
+     */
     deleteUser(user) {
       this.$store.dispatch('UserApi/deleteUser', user)
     },
+    /**
+     * 新規作成モードです。
+     */
     create() {
       this.isEdit = false
       this.openUserForm()
     },
+    /**
+     * 編集モードです。
+     * @param {number} id 選択したユーザの id です。
+     */
     update(id) {
       this.isEdit = true
       this.user = this._users.find((v) => v.id === id)
       this.openUserForm()
     },
-    openUserForm() {
-      this.isShow = true
-    },
+    /**
+     * 性別のラベルを表示します。
+     * @param {number} gender 選択した性別の id です。(1: Male, 2: Female)
+     */
     getGenderLabel(gender) {
       const targetGender = GENDER_ARRAY.find((v) => v.id === Number(gender))
       return targetGender.label
     },
+    /**
+     * UserForm を開きます。
+     */
+    openUserForm() {
+      this.isShow = true
+    },
+    /**
+     * UserForm を閉じます。
+     * @param {boolean} isShow コンポーネントの表示切替のフラグです。
+     */
     closeUserForm(isShow) {
       this.isShow = isShow
       this.user = {}
       this.sortUser()
     },
+    /**
+     * user を id 順に並び替えます。
+     */
     sortUser() {
       this._users.sort((prev, nxt) => prev.id - nxt.id)
     }
   }
 }
 </script>
-
-<style>
-
-</style>
